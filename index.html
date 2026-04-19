@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>論文導讀 — 拆解數位幻象</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --ink: #1a1a2e;
+  --paper: #f5f0e8;
+  --accent: #c0392b;
+  --accent2: #2471a3;
+  --gold: #b7950b;
+  --muted: #7f8c8d;
+  --highlight: #fef9e7;
+  --border: #d5c9b0;
+  --green: #1e8449;
+  --orange: #ca6f1e;
+  --card-bg: #fffdf7;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.8;
+}
+
+/* ── HEADER ── */
+.hero {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 80px 40px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  border: 2px solid rgba(192,57,43,0.3);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 40px;
+  width: 180px; height: 180px;
+  border: 1px solid rgba(183,149,11,0.4);
+  border-radius: 50%;
+}
+.hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--accent); }
+.hero-sub {
+  font-size: 16px;
+  color: rgba(245,240,232,0.65);
+  margin-bottom: 32px;
+  font-weight: 300;
+}
+.hero-meta {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-meta-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.hero-meta-value {
+  font-size: 14px;
+  color: var(--paper);
+  font-weight: 500;
+}
+
+/* ── NAV ── */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  background: rgba(245,240,232,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  padding: 0 40px;
+}
+.nav-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-btn {
+  padding: 14px 18px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.nav-btn:hover { color: var(--ink); }
+.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 860px; margin: 0 auto; padding: 60px 40px; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 80px; scroll-margin-top: 60px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  background: rgba(192,57,43,0.08);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.section-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--accent2);
+}
+.card p { font-size: 14px; color: #444; line-height: 1.9; }
+
+/* ── TERM BOXES ── */
+.term-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.term-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent2);
+  border-radius: 6px;
+  padding: 16px 18px;
+}
+.term-abbr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent2);
+  margin-bottom: 4px;
+}
+.term-full {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.term-def { font-size: 13px; line-height: 1.7; color: #444; }
+
+/* ── HYPOTHESIS BOXES ── */
+.hyp {
+  background: var(--highlight);
+  border: 1px solid #f0d060;
+  border-left: 4px solid var(--gold);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.hyp-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+.hyp p { font-size: 14px; color: #555; line-height: 1.8; }
+
+/* ── FLOW DIAGRAM ── */
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 24px 0;
+}
+.flow-node {
+  background: var(--accent2);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+.flow-node.red { background: var(--accent); }
+.flow-node.green { background: var(--green); }
+.flow-node.gold { background: var(--gold); }
+.flow-arrow {
+  text-align: center;
+  font-size: 20px;
+  color: var(--muted);
+  line-height: 1.4;
+  padding: 4px 0;
+}
+
+/* ── QA BOXES ── */
+.qa {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.qa-q {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+.qa-q:hover { background: #2c2c4a; }
+.qa-q .toggle { font-size: 18px; transition: transform 0.2s; }
+.qa-q.open .toggle { transform: rotate(45deg); }
+.qa-a {
+  display: none;
+  padding: 16px 20px;
+  background: var(--card-bg);
+  font-size: 14px;
+  color: #444;
+  line-height: 1.9;
+  border-top: 1px solid var(--border);
+}
+.qa-a.show { display: block; }
+
+/* ── STATUS BADGES ── */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.badge-green { background: #d5f5e3; color: var(--green); }
+.badge-red { background: #fadbd8; color: var(--accent); }
+.badge-yellow { background: #fef9e7; color: var(--gold); border: 1px solid #f0d060; }
+
+/* ── SCALE TABLE ── */
+.scale-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+.scale-table th {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+}
+.scale-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: #444;
+}
+.scale-table tr:nth-child(even) td { background: var(--highlight); }
+.scale-table code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0,0,0,0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* ── BODY TEXT ── */
+p { font-size: 15px; line-height: 1.95; color: #333; margin-bottom: 16px; }
+.lead { font-size: 17px; color: #222; font-weight: 400; line-height: 1.85; margin-bottom: 24px; }
+strong { color: var(--ink); }
+.highlight-text { background: rgba(183,149,11,0.12); padding: 2px 4px; border-radius: 3px; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; margin: 16px 0; }
+.checklist li {
+  padding: 8px 0 8px 28px;
+  position: relative;
+  font-size: 14px;
+  color: #444;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.checklist li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+.checklist li.warn::before { content: '⚠'; color: var(--orange); }
+.checklist li.missing::before { content: '✗'; color: var(--accent); }
+
+/* ── FORMULA ── */
+.formula {
+  background: var(--ink);
+  color: #a8d8ea;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 20px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: center;
+  margin: 20px 0;
+  letter-spacing: 1px;
+}
+.formula span { color: var(--accent); font-weight: 700; }
+
+/* ── PROGRESS ── */
+.progress-bar {
+  background: var(--border);
+  border-radius: 99px;
+  height: 10px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  border-radius: 99px;
+  transition: width 1s ease;
+}
+
+/* ── WARNING BOX ── */
+.warn-box {
+  background: #fef5e7;
+  border: 1px solid #f0b429;
+  border-left: 4px solid var(--orange);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 14px;
+  color: #5d4037;
+  line-height: 1.8;
+}
+.info-box {
+  background: #eaf4fb;
+  border: 1px solid #aed6f1;
+  border-left: 4px solid var(--accent2);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 14px;
+  color: #1a5276;
+  line-height: 1.8;
+}
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--ink);
+  color: rgba(245,240,232,0.5);
+  text-align: center;
+  padding: 40px;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media (max-width: 600px) {
+  .hero { padding: 40px 20px; }
+  .main { padding: 40px 20px; }
+  .sticky-nav { padding: 0 16px; }
+  .term-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">論文審查導讀 · 備考手冊</div>
+    <h1>拆解<span>數位幻象</span><br>基於 MOT 理論的服務誠信回歸研究</h1>
+    <div class="hero-sub">Deconstructing Digital Illusions: A MOT-Based Study on Service Integrity Restoration</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">研究者</span>
+        <span class="hero-meta-value">黄國津</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">所屬機構</span>
+        <span class="hero-meta-value">建國科技大學</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">核心理論</span>
+        <span class="hero-meta-value">MOT × PZB × TAM × eWOM</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">文件版本</span>
+        <span class="hero-meta-value">研究計畫書 v11 · 34 篇文獻</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">整體完成度</span>
+        <span class="hero-meta-value">～65%（計畫書階段）</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="sticky-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="goTo('overview')">總覽</button>
+    <button class="nav-btn" onclick="goTo('terms')">專有名詞</button>
+    <button class="nav-btn" onclick="goTo('ch1')">第一章</button>
+    <button class="nav-btn" onclick="goTo('ch2')">第二章</button>
+    <button class="nav-btn" onclick="goTo('ch3')">第三章</button>
+    <button class="nav-btn" onclick="goTo('ch4')">第四章</button>
+    <button class="nav-btn" onclick="goTo('ch5')">第五章</button>
+    <button class="nav-btn" onclick="goTo('hypotheses')">假說速查</button>
+    <button class="nav-btn" onclick="goTo('qa')">委員QA</button>
+    <button class="nav-btn" onclick="goTo('appendix')">附錄</button>
+    <button class="nav-btn" onclick="goTo('gaps')">完成度</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ── 0. OVERVIEW ── -->
+<section class="section" id="overview">
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2 class="section-title">研究概述：三分鐘導讀</h2>
+  </div>
+
+  <p class="lead">本研究聚焦於一個普遍存在的數位消費問題：<strong>網路評論中充斥假好評，系統性拉高消費者的購前期望，導致實際體驗後產生落差與失落感</strong>。研究提出「MOT Calibrator」工具，協助消費者辨別假評、校準期望，並將此現象正式命名為「<strong>期望通膨悖論（Expectation Inflation Paradox, EIP）</strong>」。</p>
+
+  <div class="flow">
+    <div class="flow-node red">問題：假評氾濫 → 消費者期望被人工拉高</div>
+    <div class="flow-arrow">↓ 為什麼危險？</div>
+    <div class="flow-node">PZB公式：服務品質 = 感知績效 − 期望值<br><small style="opacity:0.8">期望被假評拉高 → 同樣的服務 → 品質分數更低</small></div>
+    <div class="flow-arrow">↓ 理論基礎是？</div>
+    <div class="flow-node gold">MOT理論：真實的服務體驗，必然在評論中留下具體接觸點的描述</div>
+    <div class="flow-arrow">↓ 所以怎麼解決？</div>
+    <div class="flow-node green">MOT Calibrator：分析評論的「具體性」，偵測假評，主動提示消費者調低期望</div>
+  </div>
+
+  <div class="info-box">
+    <strong>📌 一句話說清楚論文貢獻：</strong><br>
+    首次將「服務管理的 MOT 理論」與「假評偵測」結合，從「識別造假者」的技術問題，拓展為「保護消費者期望品質」的服務管理問題，並提出可操作的期望校準工具。
+  </div>
+</section>
+
+<!-- ── 1. TERMS ── -->
+<section class="section" id="terms">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">專有名詞完整解釋</h2>
+  </div>
+
+  <p>這些是論文中最常出現的縮寫與術語，審查時每一個都可能被問到。</p>
+
+  <div class="term-grid">
+    <div class="term-box">
+      <div class="term-abbr">MOT</div>
+      <div class="term-full">Moment of Truth｜真實瞬間</div>
+      <div class="term-def">Jan Carlzon（1987）提出。指每一個顧客與服務接觸的具體瞬間——如：等待時的感受、服務員的態度、食物的口感——都是顧客形成服務印象的關鍵節點。<br><br><strong>本研究的核心邏輯：</strong>真實體驗過的人，評論一定有 MOT 的具體描述；沒體驗過的人，評論只有空洞標籤。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">PZB 模型</div>
+      <div class="term-full">Parasuraman, Zeithaml & Berry（1985）</div>
+      <div class="term-def">服務品質缺口模型，核心公式：<br><strong>SQ = 感知績效（P）− 期望值（E）</strong><br><br>分數為正 → 超出期望 → 顧客滿意<br>分數為負 → 低於期望 → 顧客失望<br><br><strong>本研究的應用：</strong>假評把 E（期望）人工拉高，即使 P 不變，SQ 也會變負。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">ZMOT</div>
+      <div class="term-full">Zero Moment of Truth｜第零關鍵時刻</div>
+      <div class="term-def">Google（2011）提出。指消費者在進店前，先在網路上搜尋評價的那個「第零個接觸時刻」。原本設計是幫消費者降低資訊不對稱，但假評讓這個機制反轉，變成「放大幻象」。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">eWOM</div>
+      <div class="term-full">Electronic Word of Mouth｜網路電子口碑</div>
+      <div class="term-def">泛指所有線上評論、社群媒體分享、討論串等。是 ZMOT 階段消費者最主要的資訊來源。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">PWOM / NWOM</div>
+      <div class="term-full">Positive / Negative Word of Mouth</div>
+      <div class="term-def"><strong>PWOM</strong> = 正向口碑（五星好評、推薦文）<br><strong>NWOM</strong> = 負向口碑（差評、抱怨文）<br><strong>Fake PWOM</strong> = 假正向口碑，即人工製造的假好評，是本研究的研究對象。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">SERVQUAL</div>
+      <div class="term-full">Service Quality Measurement Scale</div>
+      <div class="term-def">PZB 三位學者（1988）開發的服務品質量表，有五大維度：<br>① 有形性（Tangibles）<br>② 可靠性（Reliability）<br>③ 回應性（Responsiveness）<br>④ 保證性（Assurance）<br>⑤ 同理心（Empathy）<br><br>本研究的量表改編自此。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">TAM</div>
+      <div class="term-full">Technology Acceptance Model｜科技接受模型</div>
+      <div class="term-def">Davis（1989）提出。解釋人為什麼接受或拒絕使用一項新科技，有兩個核心構念：<br><strong>PU</strong>（感知有用性）→ 這東西對我有幫助嗎？<br><strong>PEOU</strong>（感知易用性）→ 這東西好用嗎？<br>→ 兩者共同預測 <strong>ITU</strong>（使用意圖）</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">Specificity Score (SS)</div>
+      <div class="term-full">具體性分數｜本研究自創指標</div>
+      <div class="term-def">量化評論中「MOT 接觸點詞彙」的密度，是 MOT Calibrator 的核心演算指標。公式：<br><strong>SS = MOT 接觸點詞數 ÷ 總詞數</strong><br>（加計感官詞、人員互動詞、時空詞的加權）</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">Between-subjects Design</div>
+      <div class="term-full">受試者間設計｜獨立組實驗設計</div>
+      <div class="term-def">實驗設計的一種，每個參與者只被分派到一個實驗條件（本研究：控制組 / 實驗組一 / 實驗組二），三組彼此獨立，互不影響，以排除學習效應。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">Cohen's Kappa (κ)</div>
+      <div class="term-full">標注者間一致性係數</div>
+      <div class="term-def">衡量兩位人工標注者的判斷有多一致。κ 值越接近 1 越好：<br>κ < 0.40 = 一致性差<br>κ = 0.41–0.60 = 中等<br>κ ≥ 0.70 = 良好（本研究目標）</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">AUC / ROC</div>
+      <div class="term-full">Area Under Curve / Receiver Operating Characteristic</div>
+      <div class="term-def">評估二元分類模型（真/假評）整體偵測能力的指標。AUC 越接近 1 越好：<br>AUC = 0.5 → 跟隨機猜測一樣差<br>AUC ≥ 0.8 → 良好鑑別力</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">SEM / CFA</div>
+      <div class="term-full">結構方程模型 / 驗證性因素分析</div>
+      <div class="term-def"><strong>CFA</strong>：確認量表的題項是否真的在測同一個構念（建構效度）<br><strong>SEM</strong>：同時估計多個構念之間的因果路徑（如：PU → ITU）<br>用 AMOS 或 R 的 lavaan 套件執行</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">Power Distance</div>
+      <div class="term-full">權力距離（霍夫斯泰德文化維度）</div>
+      <div class="term-def">Hofstede 提出的跨文化指標。<strong>低權力距離</strong>的社會（如台灣）傾向相信平等，個人更依賴口碑而非權威，因此對 PWOM 的接受度更高——這使台灣消費者對假評的期望通膨效應特別敏感。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">LIWC</div>
+      <div class="term-full">Linguistic Inquiry and Word Count</div>
+      <div class="term-def">心理語言學分析工具，分析文字中不同類別詞彙的比例（如：認知歷程詞、情感詞、感官詞）。研究顯示假評的「認知歷程詞」密度較高，真實評論的「感官詞」密度較高。</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">n-gram Cosine Similarity</div>
+      <div class="term-full">語法相似度</div>
+      <div class="term-def">衡量兩段文字在語言結構上有多相似。假評往往是模板複製，相似度極高。<br><br>「已買，毛孩很愛」× 100 條 → Cosine Similarity 趨近 1.0</div>
+    </div>
+    <div class="term-box">
+      <div class="term-abbr">IRB</div>
+      <div class="term-full">Institutional Review Board｜研究倫理委員會</div>
+      <div class="term-def">學術機構中審查涉及人類受試者研究的委員會。執行實驗前必須取得 IRB 核准，確保研究設計符合倫理規範（知情同意、隱私保護等）。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2. CH1 ── -->
+<section class="section" id="ch1">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">第一章：研究背景與動機</h2>
+  </div>
+
+  <p class="lead">這章在回答：<strong>為什麼要做這個研究？問題在哪裡？</strong></p>
+
+  <div class="card">
+    <div class="card-title">1.1 核心問題意識</div>
+    <p>服務業天生具有四大特性：<strong>無形性（Intangibility）</strong>、<strong>異質性（Heterogeneity）</strong>、<strong>易逝性（Perishability）</strong>、<strong>同時性（Simultaneity）</strong>。這導致消費者在購買前無法「先試用」，只能依賴他人的評論決策。</p>
+    <p>問題在於：當網路評論充滿假評，這個「降低不確定性」的機制就反轉成「製造幻象的工具」。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">1.2 假評的制式特徵（研究人的田野觀察）</div>
+    <p>論文用三個真實案例說明假評的共同特徵：</p>
+    <ul style="margin: 12px 0 0 20px; font-size: 14px; color: #444; line-height: 2;">
+      <li>寵物食品類：「已買，毛孩很愛♥」——跨品牌複製貼上</li>
+      <li>餐飲類：「環境不錯，服務好，下次還會來」——沒有任何具體細節</li>
+      <li>美容類：「效果超好，用了就回不去了」——情感標籤堆疊，零可驗證資訊</li>
+    </ul>
+    <p style="margin-top: 12px;">共同特徵稱為「<strong>語意去脈絡化</strong>」：缺乏對真實服務接觸點（MOT）的具體描述。</p>
+  </div>
+
+  <div class="formula">
+    服務品質（SQ）= <span>感知績效（P）</span> − <span>期望值（E）</span>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠ 最重要的邏輯：</strong>假評把 E（期望）拉高，即使服務本身品質 P 維持不變，SQ 公式的結果也必然變小（甚至變負數）。這叫「<strong>期望通膨悖論（EIP）</strong>」——不是服務變差，是期望被拉太高。
+  </div>
+</section>
+
+<!-- ── 3. CH2 ── -->
+<section class="section" id="ch2">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">第二章：文獻回顧與理論架構</h2>
+  </div>
+
+  <p class="lead">這章在回答：<strong>學術界對這個問題已經知道什麼？你站在誰的肩膀上？</strong></p>
+
+  <div class="card">
+    <div class="card-title">理論三角：三個核心理論的關係</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px;">
+      <div style="background: #eaf4fb; padding: 14px; border-radius: 6px; font-size: 13px;">
+        <strong style="color: var(--accent2);">MOT 理論</strong><br>
+        Carlzon (1987)<br><br>
+        告訴你「真假評論在語言上的區別在哪裡」——真實體驗一定有接觸點細節
+      </div>
+      <div style="background: #fef9e7; padding: 14px; border-radius: 6px; font-size: 13px;">
+        <strong style="color: var(--gold);">PZB 模型</strong><br>
+        Parasuraman et al. (1985)<br><br>
+        告訴你「為什麼假評有害」——期望通膨直接導致品質感知下降
+      </div>
+      <div style="background: #fdf2f8; padding: 14px; border-radius: 6px; font-size: 13px;">
+        <strong style="color: #8e44ad;">TAM 模型</strong><br>
+        Davis (1989)<br><br>
+        告訴你「怎麼驗證工具有沒有人要用」——感知有用性預測使用意圖
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2.5 NLP 假評偵測研究回顧的重點</div>
+    <table class="scale-table">
+      <tr><th>技術路徑</th><th>代表研究</th><th>效果</th><th>本研究的差異</th></tr>
+      <tr><td>BERT / RoBERTa</td><td>Mohawesh et al. (2024)</td><td>RoBERTa 達 97% 準確率</td><td>技術導向，缺服務管理視角</td></tr>
+      <tr><td>圖神經網路 GNN</td><td>Yu et al. (2022)</td><td>偵測評論者社群異常</td><td>行為層，非語意層</td></tr>
+      <tr><td>心理語言學 LIWC</td><td>Meppelink et al. (2025)</td><td>假評「認知詞多、感官詞少」</td><td><strong>直接支持本研究具體性假設</strong></td></tr>
+      <tr><td>LLM 假評偵測</td><td>Silva et al. (2025)</td><td>AI 假評「具體性更低」</td><td><strong>強化本研究的理論必要性</strong></td></tr>
+    </table>
+    <p style="margin-top: 8px; font-size: 13px; color: var(--muted);">💡 審查委員可能問：你跟 BERT 有什麼不同？答：BERT 是技術黑盒子，你是從服務管理理論出發，提供「為什麼這個特徵重要」的理論解釋。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2.6 服務接觸文獻的核心貢獻：「期望通膨悖論（EIP）」的正式命題化</div>
+    <p>論文在 2.6.5 節提出了一個原創性的理論命題（尚未被文獻明確述及）：</p>
+    <div class="info-box" style="margin: 12px 0 0;">
+      <strong>期望通膨悖論（Expectation Inflation Paradox, EIP）：</strong><br>
+      當假評在購前系統性拉高消費者期望（E），即使服務品質（P）完全維持不變，PZB 公式下的感知品質缺口（PG = E - P）仍必然擴大。消費者的失落感，並非源於服務真正惡化，而是源於假評製造的「期望幻象」與現實的落差。
+    </div>
+    <p style="margin-top: 12px; font-size: 13px; color: var(--muted);">這是整篇論文最有理論創新價值的命題，若能以實驗數據（H2b）驗證，即構成學術貢獻。</p>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--gold);">
+    <div class="card-title" style="color: var(--gold);">2.1.1　本研究對 PZB 模型的理論延伸：Gap D 數位資訊污染缺口（新增）</div>
+    <p>PZB 模型建立於 1985 年，從未考慮「口碑相傳」這個資訊入口遭假評系統性污染的可能性。本研究提出第六個缺口概念：</p>
+    <div class="info-box" style="margin: 12px 0;">
+      <strong>Gap D（Digital Information Pollution Gap，數位資訊污染缺口）</strong><br>
+      Gap D = E_inflated（假評污染後的期望）－ E_authentic（真實資訊環境下的期望）<br><br>
+      Gap D 發生在 ZMOT 階段，位於 PZB 模型的最上游。其數學關係：<strong>Gap D 增加多少，Gap 5 就擴大多少</strong>。這正是期望通膨悖論（EIP）的數學閉環表述。
+    </div>
+    <p style="font-size: 13px; color: var(--muted);">命名說明：刻意使用「Gap D」而非「Gap 6」，因現有延伸文獻（Curry, 1999；Luk & Layton, 2002）已將 Gap 6/7 定義為企業內部的員工認知缺口，語境完全不同。「D」代表 Digital，強調此缺口為數位時代特有現象。</p>
+    <p style="font-size: 13px; margin-top: 8px; color: var(--muted);">📌 委員若問：「這不就是已有的延伸缺口嗎？」答：現有 Gap 6/7 聚焦於企業內部，Gap D 是消費者外部資訊環境的污染缺口，位置和機制完全不同。</p>
+  </div>
+</section>
+
+<!-- ── 4. CH3 ── -->
+<section class="section" id="ch3">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">第三章：研究設計</h2>
+  </div>
+
+  <p class="lead">這章在回答：<strong>你怎麼做這個研究？如何驗證你的假說？</strong></p>
+
+  <div class="card">
+    <div class="card-title">三軌混合研究方法</div>
+    <table class="scale-table">
+      <tr><th>方法</th><th>對象</th><th>目的</th><th>驗證假說</th></tr>
+      <tr><td><strong>語料分析</strong></td><td>3,000則台灣評論</td><td>建構具體性評分演算法</td><td>H1a/b/c</td></tr>
+      <tr><td><strong>受控實驗</strong></td><td>240位參與者（三組各80）</td><td>驗證期望通膨與干預效果</td><td>H2a/b, H3a/b</td></tr>
+      <tr><td><strong>問卷調查</strong></td><td>300位消費者</td><td>驗證工具接受度（TAM）</td><td>H3c</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">受控實驗設計（最重要，委員必問）</div>
+    <p>這是 <strong>Between-subjects Design（受試者間設計）</strong>，三組各 80 人：</p>
+    <table class="scale-table" style="margin-top: 12px;">
+      <tr><th>組別</th><th>看到的評論</th><th>有無工具介入</th><th>測什麼</th></tr>
+      <tr><td>控制組（C）</td><td>高具體性真實評論</td><td>無</td><td>正常基準期望值</td></tr>
+      <tr><td>實驗組一（E1）</td><td>低具體性假評</td><td>無</td><td>假評造成的期望通膨</td></tr>
+      <tr><td>實驗組二（E2）</td><td>低具體性假評</td><td>有（校準提示）</td><td>工具干預效果</td></tr>
+    </table>
+    <p style="margin-top: 12px; font-size: 13px; color: #555;">三組都看同一部<strong>服務情境影片</strong>（相同服務水準），確保 P 值相同，才能比較 E 值的差異效果。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">量表設計概覽（四套量表）</div>
+    <table class="scale-table">
+      <tr><th>量表</th><th>縮寫</th><th>題數</th><th>施測時機</th><th>改編來源</th></tr>
+      <tr><td>購前服務期望量表</td><td>PE Scale</td><td>5題</td><td>看評論後、看影片前</td><td>SERVQUAL</td></tr>
+      <tr><td>購後感知品質量表</td><td>PP Scale</td><td>5題</td><td>看影片後</td><td>SERVQUAL（平行版）</td></tr>
+      <tr><td>評論具體性感知量表</td><td>SJ Scale</td><td>5題</td><td>問卷調查</td><td><span class="badge badge-yellow">本研究新開發</span></td></tr>
+      <tr><td>工具接受度量表</td><td>PU/PEOU/ITU</td><td>8題</td><td>E2組使用工具後</td><td>TAM（Davis 1989）</td></tr>
+    </table>
+    <p style="margin-top: 8px; font-size: 13px; color: var(--muted);">全部採七點李克特尺度（1=非常不同意，7=非常同意）</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">統計分析方法對照表</div>
+    <table class="scale-table">
+      <tr><th>分析方法</th><th>用途</th><th>對應假說</th></tr>
+      <tr><td>獨立樣本 t 檢定</td><td>比較真/假評的具體性分數均值</td><td>H1a</td></tr>
+      <tr><td>皮爾森相關</td><td>SS/TS/SG 與真實性的相關係數</td><td>H1a/b/c</td></tr>
+      <tr><td>二元羅吉斯迴歸</td><td>複合預測假評偵測效果</td><td>H1 整體</td></tr>
+      <tr><td>ROC / AUC</td><td>演算法整體鑑別力</td><td>H1 驗證</td></tr>
+      <tr><td>One-Way ANOVA</td><td>三組期望值均值差異</td><td>H2a</td></tr>
+      <tr><td>配對 t 檢定</td><td>各組 PG = PE - PP 差異</td><td>H2b</td></tr>
+      <tr><td>ANCOVA</td><td>控制數位素養後的干預效果</td><td>H3a/b</td></tr>
+      <tr><td>SEM（結構方程模型）</td><td>PU → ITU 路徑係數</td><td>H3c</td></tr>
+      <tr><td>CFA（驗證性因素分析）</td><td>量表建構效度確認</td><td>量表驗證</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ── 5. CH4 ── -->
+<section class="section" id="ch4">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">第四章：MOT Calibrator 工具設計與技術實作</h2>
+  </div>
+
+  <p class="lead">這章說明工具的完整設計——從理論框架到演算法公式，再到 AI 整合與原型開發。</p>
+
+  <div class="card">
+    <div class="card-title">設計哲學（一句話）</div>
+    <p>「不審判造假者，只保護消費者。」介入點在 ZMOT 資訊蒐集階段，輸出語言是消費者看得懂的「期望校準建議」，而非技術性的「假評概率」。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">指標一：SS 具體性分數（Specificity Score）</div>
+    <p style="margin-bottom:10px;">量化 MOT 接觸點詞彙的密度。真實體驗留下可辨識的「接觸點印記」，沒體驗過的人只能說空洞標籤。</p>
+    <div style="background:#eaf4fb; border-radius:8px; padding:12px 16px; font-family:'Noto Serif TC',serif; text-align:center; margin-bottom:12px; font-size:14px; color:var(--accent2);">
+      SS = Σ（詞彙類別得分 × 加權係數）÷ 評論總詞數 × 100
+    </div>
+    <table class="scale-table">
+      <tr><th>詞彙類別</th><th>加權係數</th><th>範例</th></tr>
+      <tr><td>人員互動詞</td><td>× 1.5</td><td>「服務員」「師傅」「主動幫我們」</td></tr>
+      <tr><td>感官描述詞</td><td>× 1.3</td><td>「湯底偏鹹」「Q彈」「鍋氣十足」</td></tr>
+      <tr><td>時空細節詞</td><td>× 1.2</td><td>「等了20分鐘」「二樓座位」「昨天晚上」</td></tr>
+      <tr><td>產品具體詞</td><td>× 1.0</td><td>「招牌牛肉麵」「草莓千層」</td></tr>
+      <tr><td>負面情節</td><td>× 2.0</td><td>「停車不方便」「偏貴」「可惜」</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">SS ≥ 70 = 高具體性；SS &lt; 30 = 低具體性（高度疑慮）</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">指標二：TS 模板相似度（Template Similarity）</div>
+    <p style="margin-bottom:10px;">偵測制式化、重複性語言模式。服務業具有「異質性」，真實評論語言必然多樣；高度相似代表套用模板。</p>
+    <p style="margin-bottom:8px;font-size:13px;"><strong>雙重偵測機制：</strong></p>
+    <ul style="font-size:13px;margin-left:20px;line-height:2;">
+      <li>套語庫比對：「大推」「CP值高」「下次還會來」「已買毛孩很愛」等 30+ 個套語</li>
+      <li>n-gram Cosine 相似度：bi-gram / tri-gram 向量與語料庫均值的相似程度</li>
+    </ul>
+    <div style="background:#eaf4fb; border-radius:8px; padding:12px 16px; font-family:'Noto Serif TC',serif; text-align:center; margin:12px 0; font-size:13px; color:var(--accent2);">
+      TS = 套語命中率 × 0.6 + n-gram 相似度 × 0.4（0–100，越高越可疑）
+    </div>
+    <p style="font-size:12px;color:var(--muted);">TS 在整體分數中以反向計入：貢獻值 = 100 − TS</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">指標三：SG 情感細粒度（Sentiment Granularity）</div>
+    <p style="margin-bottom:10px;">真實的消費體驗幾乎不可能完美，所以真實評論通常有褒有貶。假評出於商業目的，堆疊純正向標籤。</p>
+    <table class="scale-table">
+      <tr><th>情感模式</th><th>SG 分數</th><th>範例</th></tr>
+      <tr><td>純正向（無負面詞）</td><td>0–20 <span class="badge badge-red">假評高風險</span></td><td>「超好吃！完美！強力推薦！」</td></tr>
+      <tr><td>輕微混合</td><td>21–50</td><td>「好吃，但有點貴」</td></tr>
+      <tr><td>明顯混合（正負並陳）</td><td>51–80 <span class="badge badge-green">真實信號</span></td><td>「湯底偏鹹，鍋氣不錯，停車不方便」</td></tr>
+      <tr><td>豐富混合（條件式評價）</td><td>81–100</td><td>「喜歡清淡的可能不適合，但肉質處理得很好」</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">整體評分公式與三色分級（最核心，委員必問）</div>
+    <div style="background:var(--ink); color:#a8d8ea; font-family:'JetBrains Mono',monospace; padding:20px; border-radius:8px; text-align:center; font-size:16px; margin-bottom:16px; letter-spacing:1px;">
+      Overall = <span style="color:#ef4444;">SS</span> × 0.45 + <span style="color:#22c55e;">(100−TS)</span> × 0.30 + <span style="color:#eab308;">SG</span> × 0.25
+    </div>
+    <table class="scale-table">
+      <tr><th>等級</th><th>門檻</th><th>標籤</th><th>消費者行動建議</th></tr>
+      <tr><td><span class="badge badge-green">✓ 綠色</span></td><td>Overall ≥ 65</td><td>高具體性 · 評論可信</td><td>期望值有充分依據，正常消費</td></tr>
+      <tr><td><span class="badge badge-yellow">⚠ 橘色</span></td><td>35–64</td><td>中度疑慮 · 保留判斷</td><td>適度調整期望，不宜過度樂觀</td></tr>
+      <tr><td><span class="badge badge-red">✗ 紅色</span></td><td>Overall &lt; 35</td><td>情深不壽 · 謹慎消費</td><td>強烈建議大幅下修期望</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">「情深不壽」——商家以假評（情深）收割短期利益，終將品牌信任崩壞（不壽）</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">AI 語意推理引擎整合（第四分析層）</div>
+    <p>工具原型整合大型語言模型（LLM）作為第四分析層，補足規則型詞彙比對的語意侷限：</p>
+    <ul style="font-size:13px; margin:12px 0 0 20px; line-height:2.2;">
+      <li><strong>跨語境詞義消歧：</strong>「停車很方便」vs「停車場只有10個位子週末難找」——同樣提到停車，LLM 能分辨哪個是具體 MOT 印記</li>
+      <li><strong>隱性負面情節偵測：</strong>「等了一下」看似中性，LLM 識別為時間不確定性的間接抱怨</li>
+      <li><strong>跨指標整合解釋：</strong>以自然語言生成「AI 分析說明」，將評分邏輯轉為消費者可讀的白話</li>
+    </ul>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px;">原型採用 Claude claude-sonnet-4-20250514，透過結構化 JSON Schema 輸出分析結果，確保格式一致性。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">工具原型規格（v0.1 Demo）</div>
+    <table class="scale-table">
+      <tr><th>技術項目</th><th>規格</th></tr>
+      <tr><td>前端架構</td><td>單頁應用，HTML5 + CSS3 + 原生 JS，無框架依賴</td></tr>
+      <tr><td>AI 引擎</td><td>Anthropic Claude API（claude-sonnet-4-20250514）</td></tr>
+      <tr><td>跨裝置</td><td>響應式設計，支援桌機 / 平板 / 手機，含 iOS Safari 優化</td></tr>
+      <tr><td>輸入語言</td><td>繁體中文，針對台灣在地消費評論語境設計</td></tr>
+      <tr><td>視覺化</td><td>圓形進度圈 / 橫條圖 / 彩色關鍵詞標注 / 三色風險標籤</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">5 步驟操作流程：輸入評論 → AI 分析 → 動態評分 → 關鍵詞標注 → 閱讀期望校準建議</p>
+  </div>
+</section>
+
+<!-- ── 5.5. CH5 ── -->
+<section class="section" id="ch5">
+  <div class="section-header">
+    <span class="section-num">05.5</span>
+    <h2 class="section-title">第五章：研究預期發現與討論</h2>
+  </div>
+
+  <p class="lead">這章在回答：<strong>如果研究假說都成立，結果代表什麼意義？對理論和實務有什麼貢獻？</strong></p>
+  <div class="info-box">本章目前為「假設性討論框架」，因研究計畫書階段尚未執行實際資料收集。後續實證完成後，以真實數值取代。</div>
+
+  <div class="card">
+    <div class="card-title">H1 組預期：SS 確實能辨別真假評論</div>
+    <p>基於 MOT 理論與 Meppelink et al.（2025）心理語言學實證支持：</p>
+    <ul style="font-size:13px; margin:12px 0 0 20px; line-height:2.2;">
+      <li>SS 與人工標注真實性的相關係數預期 <strong>r ≥ 0.55</strong>（p &lt; .05）</li>
+      <li>假評 n-gram 相似度預期 <strong>&gt; 0.75</strong>，真實評論 <strong>&lt; 0.30</strong></li>
+      <li>三指標組合預測的 ROC 分析 <strong>AUC ≥ 0.82</strong></li>
+    </ul>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px;">若 H1 成立：MOT 理論首次被語言學操作化，為服務接觸理論開拓文字分析的新應用方向。</p>
+  </div>
+
+  <div class="card" style="border-left: 3px solid var(--accent);">
+    <div class="card-title" style="color:var(--accent);">H2 組預期：期望通膨悖論（EIP）的實驗性確認（最重要）</div>
+    <p>這是整篇論文最具突破性的假說。預期實驗結果：</p>
+    <ul style="font-size:13px; margin:12px 0 0 20px; line-height:2.2;">
+      <li><strong>H2a：</strong>E1 組（假評條件）PE 均值顯著高於 C 組，Cohen's d ≥ 0.50</li>
+      <li><strong>H2b（期望通膨悖論（EIP））：</strong>三組觀看完全相同的服務影片後，E1 組感知品質缺口（PG = PE − PP）顯著大於 C 組——即服務水準不變、品質感知卻惡化</li>
+    </ul>
+    <div class="warn-box" style="margin-top:12px;">
+      <strong>理論意義：</strong>若 H2b 獲得支持，這是首個以實驗數據確認「假評的損害性不在不誠實本身，而在於對 PZB 機制的系統性破壞」的研究——假評的危害以前只有觀察性研究，這是因果確認。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">H3 組預期：MOT Calibrator 干預有效</div>
+    <table class="scale-table">
+      <tr><th>假說</th><th>預期結果</th><th>意義</th></tr>
+      <tr><td>H3a</td><td>E2 組 PE 顯著低於 E1 組</td><td>校準提示確實能下修消費者期望</td></tr>
+      <tr><td>H3b</td><td>E2 組消費滿意度顯著高於 E1 組</td><td>降低期望 → 提升滿意度（工具核心邏輯成立）</td></tr>
+      <tr><td>H3c</td><td>PU → ITU 路徑係數 β ≥ 0.45</td><td>TAM 在本工具情境適配（有市場接受潛力）</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">理論貢獻總結（委員必問：你對學術界的貢獻是什麼？）</div>
+    <table class="scale-table">
+      <tr><th>層次</th><th>具體貢獻</th><th>依據</th></tr>
+      <tr><td>理論拓展</td><td>MOT 首次應用於評論語言分析</td><td>Carlzon (1987) → 語言學操作化</td></tr>
+      <tr><td>命題建構</td><td>「期望通膨悖論（EIP）」正式命題</td><td>PZB × eWOM 理論組合</td></tr>
+      <tr><td><strong style="color:var(--gold);">模型延伸</strong></td><td><strong style="color:var(--gold);">Gap D 數位資訊污染缺口（PZB 延伸）</strong></td><td><strong style="color:var(--gold);">首次將假評污染納入 PZB 缺口框架</strong></td></tr>
+      <tr><td>框架整合</td><td>服務管理視角引入假評偵測</td><td>超越 NLP 純技術視角</td></tr>
+      <tr><td>工具創新</td><td>消費者端期望校準干預機制</td><td>現有 FRD 研究的缺口</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ── 6. HYPOTHESES ── -->
+<section class="section" id="hypotheses">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">九條假說速查卡</h2>
+  </div>
+
+  <p>論文共提出 9 條正式研究假說，分三組，每條都要能用白話說清楚。</p>
+
+  <h3 style="font-size: 15px; color: var(--accent2); margin: 24px 0 12px; font-family: 'Noto Serif TC', serif;">H1 組：語意特徵辨識假說</h3>
+
+  <div class="hyp">
+    <div class="hyp-label">H1a</div>
+    <p><strong>白話：</strong>評論越具體，越可能是真的。<br>
+    <strong>技術：</strong>MOT 接觸點詞彙密度（Specificity Score）與人工標注真實性分數呈正相關。</p>
+  </div>
+  <div class="hyp">
+    <div class="hyp-label">H1b</div>
+    <p><strong>白話：</strong>假評的句型都長得一樣。<br>
+    <strong>技術：</strong>疑似假評的 n-gram Cosine 相似度顯著高於真實評論。</p>
+  </div>
+  <div class="hyp">
+    <div class="hyp-label">H1c</div>
+    <p><strong>白話：</strong>真實評論有褒有貶，假評全部都是好話。<br>
+    <strong>技術：</strong>情感細粒度（正負混合程度）與真實性呈正相關。</p>
+  </div>
+
+  <h3 style="font-size: 15px; color: var(--accent); margin: 24px 0 12px; font-family: 'Noto Serif TC', serif;">H2 組：期望通膨假說（最具理論創新性）</h3>
+
+  <div class="hyp" style="border-color: var(--accent); background: #fdf5f3;">
+    <div class="hyp-label" style="color: var(--accent);">H2a</div>
+    <p><strong>白話：</strong>看完假評的人，期望值比看完真實評論的人高。<br>
+    <strong>技術：</strong>暴露於假評環境的消費者，購前期望值（PE）顯著高於真實評論環境組。</p>
+  </div>
+  <div class="hyp" style="border-color: var(--accent); background: #fdf5f3;">
+    <div class="hyp-label" style="color: var(--accent);">H2b ⭐ 最重要</div>
+    <p><strong>白話：</strong>服務沒有變差，但因為之前期望被假評拉太高，所以感覺很失望。<br>
+    <strong>技術：</strong>在服務水準相同的前提下，假評組的感知品質缺口（PG = PE - PP）顯著大於真實評論組。<br>
+    <span style="font-size: 12px; color: var(--accent);">→ 這就是「期望通膨悖論（EIP）」的實驗性確認</span></p>
+  </div>
+
+  <h3 style="font-size: 15px; color: var(--green); margin: 24px 0 12px; font-family: 'Noto Serif TC', serif;">H3 組：工具干預效果假說</h3>
+
+  <div class="hyp" style="border-color: var(--green); background: #eafaf1;">
+    <div class="hyp-label" style="color: var(--green);">H3a</div>
+    <p><strong>白話：</strong>看到工具的警示後，期望值會下降。<br>
+    <strong>技術：</strong>接收期望校準提示的 E2 組，購前期望值顯著低於未接收的 E1 組。</p>
+  </div>
+  <div class="hyp" style="border-color: var(--green); background: #eafaf1;">
+    <div class="hyp-label" style="color: var(--green);">H3b</div>
+    <p><strong>白話：</strong>調低期望之後，消費者其實更滿意。<br>
+    <strong>技術：</strong>在相同服務水準下，E2 組的消費滿意度顯著高於 E1 組。</p>
+  </div>
+  <div class="hyp" style="border-color: var(--green); background: #eafaf1;">
+    <div class="hyp-label" style="color: var(--green);">H3c</div>
+    <p><strong>白話：</strong>覺得這工具有用的人，更願意去用它。<br>
+    <strong>技術：</strong>感知有用性（PU）正向預測使用意圖（ITU）——TAM 模型驗證。</p>
+  </div>
+</section>
+
+<!-- ── 7. QA ── -->
+<section class="section" id="qa">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">審查委員常見問題模擬</h2>
+  </div>
+
+  <p>以下模擬審查委員可能提出的問題，並提供對應的學術答覆。點擊問題展開內容。</p>
+  <div style="margin-top: 20px;">
+
+  <div class="qa">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Q1：本研究憑什麼說「具體的評論就是真的」？具體性和真實性一定有關嗎？
+      <span class="toggle">+</span>
+    </div>
+    <div class="qa-a">
+      此為本研究最核心的理論假設，其論點建立在 MOT 理論的邏輯上：真實的服務體驗是一種身體力行的感知過程——等待時間、食物口感、服務人員的回應方式——這些細節只有真正體驗過的人才會知道。未曾親身體驗者，只能援引通用的讚美標籤，無法呈現具體的接觸點描述。<br><br>
+      這一邏輯也獲得心理語言學研究的支持：Meppelink 等人（2025）透過 LIWC 分析 3,070 份評論，確認假評的感官詞密度顯著低於真實評論。當然，具體性不是真實性的充分條件，但它是必要條件——這也是本研究以「具體性」作為辨別工具、而非直接判定真偽的理由。
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Q2：本研究的 Specificity Score 是怎麼計算的？有沒有客觀的驗證？
+      <span class="toggle">+</span>
+    </div>
+    <div class="qa-a">
+      Specificity Score 的計算邏輯為：<br><br>
+      <code style="background: #eee; padding: 4px 8px; border-radius: 4px; font-size: 13px;">SS = Σ（詞彙類別得分 × 加權係數）÷ 評論總詞數 × 100</code><br><br>
+      加權係數依 MOT 理論建立四大類別：人員互動詞（×1.5）、感官描述詞（×1.3）、時空細節詞（×1.2）及產品具體詞（×1.0），負面情節另加權 ×2.0 作為真實信號。驗證計畫分兩步驟：首先以人工標注資料集（n ≥ 3,000）進行皮爾森相關分析，確認 SS 與標注真實性的相關係數；其次以 ROC 曲線與 AUC 值評估演算法整體鑑別力，目標 AUC ≥ 0.80。<br><br>
+      工具原型（MOT Calibrator v0.1）已完成開發，演算法邏輯完整對映理論框架，待語料庫建置後進行效度驗證。
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Q3：本研究如何確保實驗的內部效度？有沒有可能是其他因素影響了期望值？
+      <span class="toggle">+</span>
+    </div>
+    <div class="qa-a">
+      本研究在實驗設計上採取了以下控制措施以確保內部效度：<br><br>
+      1. <strong>隨機分派（Random Assignment）</strong>：參與者被隨機分配到三組，控制個別差異的影響。<br>
+      2. <strong>統一服務刺激</strong>：三組觀看完全相同的服務情境影片，確保 P（感知績效）值一致。<br>
+      3. <strong>ANCOVA 控制</strong>：以「數位素養」作為共變數，統計上排除個人技術熟悉度對工具效果評估的干擾。<br>
+      4. <strong>雙盲語料標注</strong>：人工標注階段採雙盲設計，以 Cohen's Kappa 確保標注一致性。<br><br>
+      主要的外部效度限制在於實驗室情境的真實性——實際消費決策的情境複雜程度高於實驗室設置，此為後續田野實驗的延伸方向。
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Q4：本研究跟現有 BERT/RoBERTa 假評偵測有什麼本質差異？
+      <span class="toggle">+</span>
+    </div>
+    <div class="qa-a">
+      差異在三個層次：<br><br>
+      <strong>① 問題框架不同：</strong>現有研究問「如何識別假評」，本研究問「如何保護消費者的期望品質」。前者是技術問題，後者是服務管理問題。<br><br>
+      <strong>② 理論基礎不同：</strong>現有 NLP 研究是資料驅動（data-driven），從語料中學習特徵。本研究是理論驅動（theory-driven），從 MOT 理論演繹出「為什麼具體性是重要特徵」的理論解釋。<br><br>
+      <strong>③ 介入對象不同：</strong>現有研究的介入對象是平台（讓平台識別並刪除假評），本研究的介入對象是消費者（讓消費者校準自己的期望）。兩者互補，不互斥。
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Q5：「期望通膨悖論（EIP）」是本研究的原創命題嗎？文獻中沒有人提過？
+      <span class="toggle">+</span>
+    </div>
+    <div class="qa-a">
+      就本研究的文獻查證範圍而言，目前尚未有研究在理論上正式命題化「假評誘發期望通膨 → 品質缺口擴大」的因果鏈——現有文獻或討論假評的偵測（技術層面），或討論 eWOM 對期望的影響（消費者行為層面），但尚無研究將兩者結合進 PZB 框架，以「期望通膨悖論」的形式提出。<br><br>
+      本研究亦已系統性查證相關概念：Ulrich（2024）的「Expectation Paradox」指職場管理兩難，語境迥異；「Service Recovery Paradox」的機制方向相反；Camilleri & Kozak（2025）的誇大評論研究因果方向不同。綜合查證後確認，EIP 命題在現有文獻中屬原創提案，詳見研究計畫書第 2.7 節。<br><br>
+      PZB 模型本身是成熟理論，eWOM 對期望的影響也有實證（Schindler et al., 2018）。本研究的貢獻在於：首次將這三個既有的理論基礎組合為一個新的命題，並設計受控實驗（H2b）加以驗證。
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="qa-q" onclick="toggleQA(this)">
+      Q6：本研究的工具有可能被假評商業模式反制（對抗性更新）嗎？
+      <span class="toggle">+</span>
+    </div>
+    <div class="qa-a">
+      此為一個現實的挑戰，本研究第 5.5 節「研究限制」已坦承這一點。當工具的評分邏輯被揭露，假評產業可能學習並規避——例如在假評中人工加入更多具體詞彙。<br><br>
+      對應策略有三：<br>
+      1. <strong>持續學習（Active Learning）</strong>：系統持續從新語料中更新評分模型，而非使用靜態規則。<br>
+      2. <strong>多維度評分</strong>：SS 是多個維度的複合指標（具體詞彙 + 語法多樣性 + 情感細粒度），難以同時偽造所有維度。<br>
+      3. <strong>期望校準的根本價值</strong>：即使假評偵測有一定誤差率，只要系統能成功降低消費者的過高期望，仍然能縮小感知品質缺口（此為 H3 的核心邏輯）。
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<!-- ── 8. APPENDIX ── -->
+<section class="section" id="appendix">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2 class="section-title">附錄速覽</h2>
+  </div>
+
+  <p>研究計畫書 v8 共包含 5 個附錄，以下說明各附錄用途與審查重點。</p>
+
+  <div class="card">
+    <div class="card-title">附錄 A：研究時程規劃</div>
+    <p>七個 Phase 的完整時程，從 IRB 申請到期刊投稿，預計 12 個月以上。<strong>審查委員通常會問：「你預計什麼時候完成語料收集？」</strong>答：Phase 2（第 2–4 個月），需建立 n ≥ 3,000 則標注語料，這是最關鍵的里程碑。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">附錄 B：人工標注準則摘要</div>
+    <p>提供給兩位標注者的判斷準則，分四個等級：真實（G）/ 疑似假評（S）/ 高度疑似（H）/ 無法判斷（U）。目標 Cohen's Kappa ≥ 0.70。<strong>委員可能問：「你如何處理標注者不一致的情況？」</strong>答：第三位仲裁標注者裁決，不一致案例記錄為詞彙庫優化依據。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">附錄 C：問卷正式版索引</div>
+    <p>共 5 個部分（Part 0–5），27 題，預計填答 12–15 分鐘。完整版已輸出為獨立 Word 文件（研究問卷正式版.docx），含七點李克特量表格式。<strong>四套量表的來源：</strong></p>
+    <table class="scale-table">
+      <tr><th>量表</th><th>改編來源</th><th>題數</th></tr>
+      <tr><td>PE / PP Scale（購前期望 / 購後感知）</td><td>SERVQUAL（Parasuraman et al. 1988）</td><td>各 5 題</td></tr>
+      <tr><td>SJ Scale（評論具體性感知）</td><td>本研究新開發</td><td>5 題</td></tr>
+      <tr><td>TAM Scale（PU / PEOU / ITU）</td><td>Davis（1989）</td><td>8 題</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">附錄 D：MOT Calibrator 工具原型說明</div>
+    <p>工具已完成 v0.1 Demo 開發（MOT_Calibrator_Demo.html），可直接在瀏覽器開啟使用。內建 5 個測試範例（2 個真實評論 / 3 個假評），支援手機版操作。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">附錄 E：研究倫理（IRB）申請說明</div>
+    <p>本研究涉及人類受試者（實驗 n≥240 + 問卷 n≥300），計畫書通過後需向 IRB 提交申請。申請文件包含：知情同意書、實驗材料、問卷、資料安全說明。實驗材料中使用的假評範例不涉及任何真實商家，已排除商譽影響的倫理疑慮。</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">附錄 F（額外）：Python Specificity Scorer 演算法程式碼</div>
+    <p>已完成 Python 實作（mot_specificity_scorer.py），包含 SS / TS / SG 三個評分函數與五個測試案例。測試結果：真實評論 A 得分 88/100，疑似假評 A 得分 21/100，驗證演算法方向正確。</p>
+    <div style="background:#f8f8f8; border-radius:6px; padding:12px 14px; font-family:'JetBrains Mono',monospace; font-size:12px; margin-top:10px; line-height:1.8; border:1px solid var(--border);">
+      score_review("昨天晚上帶家人去吃…") → Overall: 88.0 ✓ 高具體性<br>
+      score_review("已買，毛孩很愛❤️…") → Overall: 21.3 ✗ 情深不壽
+    </div>
+  </div>
+</section>
+
+<!-- ── 9. GAPS ── -->
+<section class="section" id="gaps">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2 class="section-title">完成度自我評估 &amp; 後續路線圖</h2>
+  </div>
+
+  <p class="lead">誠實面對目前狀態，是審查前最重要的準備。目前文件定位是<strong>研究計畫書等級</strong>，整體完成度約 <strong style="color:var(--accent);">65%</strong>（相較於初版的 38%，已大幅補足）。</p>
+
+  <div style="margin: 24px 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <span style="font-size: 14px; font-weight: 500;">理論架構與文獻回顧（34篇，含 DOI）</span>
+      <span class="badge badge-green">✓ 95%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 95%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">研究假說（9條）與方法設計（三軌）</span>
+      <span class="badge badge-green">✓ 90%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">量表設計（四套 / 27題 / 含問卷正式版）</span>
+      <span class="badge badge-green">✓ 95%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 95%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">工具設計（第四章 9節 + 演算法程式碼 + Demo）</span>
+      <span class="badge badge-green">✓ 90%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">討論框架（第五章假設性框架）</span>
+      <span class="badge badge-yellow">⚠ 50%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">語料收集與人工標注（n ≥ 3,000）</span>
+      <span class="badge badge-red">✗ 0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">受控實驗執行（n ≥ 240）</span>
+      <span class="badge badge-red">✗ 0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; margin-top: 16px;">
+      <span style="font-size: 14px; font-weight: 500;">統計分析（ANOVA / SEM / ROC）與結果章節</span>
+      <span class="badge badge-red">✗ 0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+
+    <div style="text-align: right; margin-top: 20px;">
+      <span style="font-size: 13px; color: var(--muted);">整體完成度（碩士論文標準）</span>
+      <span style="font-size: 22px; font-weight: 700; color: var(--accent); margin-left: 12px;">～65%</span>
+    </div>
+  </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: 30%"></div></div>
+
+    <div style="text-align: right; margin-top: 20px;">
+      <span style="font-size: 13px; color: var(--muted);">整體完成度（研究計畫書階段）</span>
+      <span style="font-size: 22px; font-weight: 700; color: var(--accent); margin-left: 12px;">～65%</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">尚待完成事項（需實際執行之研究工作）</div>
+    <ul class="checklist">
+      <li class="missing">向所屬機構研究倫理委員會（IRB）提交倫理審查申請</li>
+      <li class="missing">蒐集台灣評論平台中文語料（n ≥ 3,000 則，餐飲／美容／寵物三類）</li>
+      <li class="missing">執行雙盲人工標注，計算標注者間一致性（目標 Cohen's Kappa ≥ 0.70）</li>
+      <li class="missing">招募實驗參與者（n ≥ 240）並執行三組受控情境實驗</li>
+      <li class="missing">招募問卷受訪者（n ≥ 300）並完成 TAM 量表施測</li>
+      <li class="missing">執行統計分析（ANOVA、SEM、ROC/AUC），產生實證數值結果</li>
+      <li class="missing">依實證數據撰寫結果章節，並以真實數值取代第五章的假設性框架</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">已完成事項</div>
+    <ul class="checklist">
+      <li>研究計畫書全文（v11，含中英文摘要、六章正文、五個附錄）</li>
+      <li>理論框架建構（MOT × PZB × TAM × eWOM，34 篇文獻）</li>
+      <li>「期望通膨悖論（EIP）」命題之學術查證與原創性定位（第 2.7 節）</li>
+      <li>九條正式研究假說及三軌混合研究方法設計</li>
+      <li>四套量表設計（PE / PP / SJ / TAM，含問卷正式版）</li>
+      <li>MOT Calibrator 互動式工具原型（v0.1 Demo，含手機版優化）</li>
+      <li>Python Specificity Scorer 演算法實作（SS / TS / SG 三指標）</li>
+      <li>投稿論文初稿（依龍華科技大學研討會格式）</li>
+    </ul>
+  </div>
+
+  <div class="warn-box">
+    <strong>研究階段說明：</strong><br>
+    本研究計畫書目前處於「研究提案（Research Proposal）」階段，理論框架、研究設計與工具原型均已完備，第五章以假設性討論框架呈現預期發現。完整的實證研究（語料庫、實驗、問卷、統計分析）為後續執行之工作，預計完成後進行期刊投稿。
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div>論文導讀手冊 v2 · MOT Calibrator 研究計畫書 · 黄國津 · 建國科技大學</div>
+  <div style="margin-top: 8px; font-size: 10px; opacity: 0.5;">本導讀對應研究計畫書 v11，共 34 篇文獻，整體完成度 ～65% · 實際審查請以 Word 文件為準</div>
+</footer>
+
+<script>
+function goTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const idx = ['overview','terms','ch1','ch2','ch3','ch4','ch5','hypotheses','qa','appendix','gaps'];
+  document.querySelectorAll('.nav-btn')[idx.indexOf(id)]?.classList.add('active');
+}
+
+function toggleQA(el) {
+  el.classList.toggle('open');
+  const answer = el.nextElementSibling;
+  answer.classList.toggle('show');
+}
+
+// Active nav on scroll
+const sections = document.querySelectorAll('.section');
+const navBtns = document.querySelectorAll('.nav-btn');
+const ids = ['overview','terms','ch1','ch2','ch3','ch4','ch5','hypotheses','qa','appendix','gaps'];
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 80) current = s.id;
+  });
+  navBtns.forEach((b, i) => {
+    b.classList.toggle('active', ids[i] === current);
+  });
+});
+
+// Animate progress bars on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.progress-fill').forEach(bar => {
+        bar.style.width = bar.style.width;
+      });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
